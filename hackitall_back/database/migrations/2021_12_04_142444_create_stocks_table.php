@@ -17,9 +17,8 @@ class CreateStocksTable extends Migration
             $table->id();
             $table->string('name');
             $table->integer('dailyPercentGain');
-            $table->mediumText('description');
             $table->string('backgroundImage');
-            $table->integer('value');
+
         });
     }
 
