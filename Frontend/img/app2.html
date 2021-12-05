@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="app.css"/>
+    <title>Receiver</title>
+</head>
+<body>
+
+    
+    Company Name:  <span id="result"></span> !
+        <script>
+            document.getElementById("result").innerHTML=localStorage.getItem("textvalue");
+        </script>
+    Description :  <span id="description"></span>
+        <script>
+            document.getElementById("description").innerHTML=localStorage.getItem("description");
+        </script>
+
+<script src="js/getDataComp.js"></script>
+<script> 
+  listsPosts(document.getElementById("result").innerHTML=localStorage.getItem("textvalue"), 'result');
+  </script>
+
+</body>
+</html>

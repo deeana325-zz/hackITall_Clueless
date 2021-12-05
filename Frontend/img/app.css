@@ -1,0 +1,20 @@
+body {
+    margin: 0;
+}
+#post-section {
+    background-color: rgb(16, 15, 15);
+    color: #bcbcbc;
+    padding: 24px;
+}
+h3 {
+    font-size: 24px;
+}
+#post-items-container h3 {
+    margin: 6px;
+    padding: 6px;
+}
+a {
+    text-decoration: none;
+    padding: 6px;
+    color: #0492cee2;
+}
