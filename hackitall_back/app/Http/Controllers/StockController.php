@@ -10,60 +10,100 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 
+
+
 class StockController extends Controller
 {
 
     public function Stock($company)
     {
-        $name = $company['name'];
-        $bg = $company['backgroundImage']['ios:size=small']['url'];
-        $dailyGain = $company['dailyPercentGain'];
+        $name = $company['symbol'];
+        $dailyGain = $company['regularMarketChange'];
 
         return [
             "name" => $name,
-            "backgroundImage" => $bg,
             "dailyPercentGain" => $dailyGain
         ];
     }
     public function showStocks(Request $request)
     {
-        DB::table('stocks')-> delete();
+
         $response = Http::withHeaders(
             [
                 'x-rapidapi-host' => 'yh-finance.p.rapidapi.com',
-                'x-rapidapi-key' => '9b3c453479msh69ce199e5570e12p16b0d4jsn8c821f34ab2f'
+                'x-rapidapi-key' => '31243ee858msh7a5e1ee05ca2952p1dc5c2jsn0503a5cb35c5'
             ]
 
-    )->get('https://yh-finance.p.rapidapi.com/market/get-popular-watchlists');
+    )->get('https://yh-finance.p.rapidapi.com/stock/v2/get-recommendations', [
+            'symbol' => 'INTC'
+        ]);
 
         $data = $response->json();
 
-        $companies = $data['finance']['result'][0]['portfolios'];
+        $companies = $data['finance']['result'][0]['quotes'];
 
-        //return $companies;
-       foreach ($companies as $company) {
-           DB::table('stocks')->insert($this->Stock($company));
-       }
 
-           //return $companies;
-           return DB::table('stocks')->take(10)->get();
+        $arr = array($this->Stock($companies[0]), $this->Stock($companies[1]), $this->Stock($companies[2]), $this->Stock($companies[3]));
+
+        return $arr;
     }
 
 
+    final function getInfo($company){
+
+        $response = Http::withHeaders(
+            [
+                'x-rapidapi-host' => 'yh-finance.p.rapidapi.com',
+                'x-rapidapi-key' => '31243ee858msh7a5e1ee05ca2952p1dc5c2jsn0503a5cb35c5'
+            ]
+
+        )->get('https://yh-finance.p.rapidapi.com/stock/v2/get-profile', [
+            'symbol' => $company,
+            'region' => 'US'
+        ]);
+
+        $data = $response->json();
+
+        return $data['assetProfile']['longBusinessSummary'];
+
+    }
     final function showStats($company){
 
         $response = Http::withHeaders(
             [
                 'x-rapidapi-host' => 'yh-finance.p.rapidapi.com',
-                'x-rapidapi-key' => '9b3c453479msh69ce199e5570e12p16b0d4jsn8c821f34ab2f'
+                'x-rapidapi-key' => '31243ee858msh7a5e1ee05ca2952p1dc5c2jsn0503a5cb35c5'
             ]
 
         )->get('https://yh-finance.p.rapidapi.com/stock/v3/get-statistics', [
-            'symbol' => 'AMD'
+            'symbol' => $company
         ]);
 
         $data = $response->json();
-        return $data;
+
+        $date = array();
+        $prices = array();
+
+        $name = $data['price']['longName'];
+        $data = $data['timeSeries']['quarterlyEnterpriseValue'];
+        $cnt = 0;
+        $comp = array();
+        foreach ($data as $i){
+            $date[$cnt] = $i['asOfDate'];
+            $prices[$cnt] = $i['reportedValue']['fmt'];
+            $comp[$cnt] = [
+               'date' => $date[$cnt],
+               'price' => $prices[$cnt]
+            ];
+            $cnt = $cnt + 1;
+        }
+
+        return [
+            'name' => $name,
+            'description' => $this->getInfo($company),
+           'stats' => $comp];
+
+
     }
 
 
