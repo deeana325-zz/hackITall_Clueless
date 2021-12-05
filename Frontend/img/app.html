@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script>  function passvalues(){
+        var firstname=document.getElementById("post-items-container").value;
+        localStorage.setItem("textvalue", firstname);
+                           // key + value
+        return false;
+    }  </script>    
+    <link rel="stylesheet" href="app.css"/>
+    <title>Receiver</title>
+</head>
+<body>
+
+    <div id="post-section">
+        <h2>LATEST POSTS</h2>
+
+        <div class="search_select_box" id="selector">
+            <select class="w-100" data-live-search="true" id="post-items-container">
+                <option class="green">Goagle +0.05% </option>
+                <option class="red">Mar -0.2%</option>
+                <option class="red">Tezla -100%</option>
+                <option class="red">BioN-izare -0.05</option>
+                <option class="green">BCR +200%</option>
+                <option class="red">Nu mai am idei -inf</option>
+            </select>
+            </div>  
+          </div>
+         
+          <script src="js/post.js"></script>
+          <script> 
+            listsPosts('post-items-container');
+            </script>
+
+          
+
+        <h1> How To Pass Variables From One Page To Another Page (HTML)</h1>
+        <h2> Using Local Storage with Javascript !</h1>
+        <hr>
+        <form action="app2.html">
+            <input type="text" id="txt"/>
+            <input type="submit" value="Click" onclick="passvalues();"/>
+        </form>
+    </div>
+
+    
+    
+</body>
+</html>
